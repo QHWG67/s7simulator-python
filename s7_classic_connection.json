@@ -1,0 +1,89 @@
+{
+    "configs": [
+        {
+            "$schema": "https://siemens.com/connectivity_suite/schemas/s7_cpux00/1.0.0/config.json",
+            "config": {
+                "connections": [
+                    {
+                        "parameters": {
+                            "ip_address": "0.0.0.0",
+                            "rack_number": 0,
+                            "slot_number": 2,
+                            "plc_type": "300/400",
+                            "subscribe_plc_alarms": false
+                        },
+                        "datapoints": [
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag1",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB0"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag2",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB1"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.IntTag3",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB2"
+                                },
+                                "data_type": "Int",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.RealTag4",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB4"
+                                },
+                                "data_type": "Real",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.StringTag5",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB8"
+                                },
+                                "data_type": "String",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.DateTimeTag6",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB28"
+                                },
+                                "data_type": "DateTime",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            }
+                        ],
+                        "name": "S7300"
+                    }
+                ]
+            }
+        }
+    ]
+}
