@@ -5,7 +5,11 @@
             "name": "Python: Sudo Debug",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/s7server.py",
+            "program": "${workspaceFolder}/opcuaserver.py",
+            "args": [
+                "-f",
+                "${workspaceFolder}/opc_ua_test_model.xml"
+            ],
             "console": "integratedTerminal",
             "sudo": true
         }

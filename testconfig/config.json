@@ -1,0 +1,310 @@
+{
+    "configs": [
+        {
+            "$schema": "https://siemens.com/connectivity_suite/schemas/s7_cpux00/1.0.0/config.json",
+            "config": {
+                "connections": [
+                    {
+                        "parameters": {
+                            "ip_address": "127.0.0.1",
+                            "rack_number": 0,
+                            "slot_number": 2,
+                            "plc_type": "300/400",
+                            "subscribe_plc_alarms": false
+                        },
+                        "datapoints": [
+                                                        {
+                                "name": "100ms_6K_NOPT.BoolTag1",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB0"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag2",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB1"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.IntTag3",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB2"
+                                },
+                                "data_type": "Int",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.RealTag4",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB4"
+                                },
+                                "data_type": "Real",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.StringTag5",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB8"
+                                },
+                                "data_type": "String",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.DateTimeTag6",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBB28"
+                                },
+                                "data_type": "DateTime",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag1-0",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.0"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag2-1",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.1"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag3-2",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.2"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag4-3",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.3"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag5-4",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.4"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag6-5",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX36.5"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag36-6",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.6"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag8-37",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX37.6"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            }
+                        ],
+                        "name": "S7300"
+                    },
+                    {
+                        "parameters": {
+                            "ip_address": "192.168.160.97",
+                            "rack_number": 0,
+                            "slot_number": 2,
+                            "plc_type": "300/400",
+                            "subscribe_plc_alarms": false
+                        },
+                        "datapoints": [
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag1",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.0"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag2",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.1"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag3",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.2"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag4",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.3"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag5",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.4"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag6",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.5"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag7",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.6"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag8",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX0.7"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag9",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX1.0"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag10",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX1.1"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            },
+                            {
+                                "name": "100ms_6K_NOPT.BoolTag11",
+                                "comment": "",
+                                "address": {
+                                    "address_string": "%DB1.DBX1.2"
+                                },
+                                "data_type": "Bool",
+                                "acquisition_cycle": 1000,
+                                "acquisition_mode": "CyclicOnChange",
+                                "access_mode": "r"
+                            }
+                        ],
+                        "name": "S7400"
+                    }
+                ]
+            }
+        }
+    ]
+}

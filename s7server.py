@@ -1,3 +1,4 @@
+
 import os
 import json
 import logging
@@ -10,22 +11,39 @@ import struct
 from snap7.server import Server
 from snap7 import SrvArea
 import re
+import argparse
 
 # ---------------------- Configuration and Parameter Priority ----------------------
 def get_config_param(key, env_key, cfg, default):
     return os.environ.get(env_key) or cfg.get(key) or default
 
-def load_s7_classic_config():
-    # First check current working directory, then script directory
-    for path in [os.getcwd(), os.path.dirname(__file__)]:
-        config_path = os.path.join(path, "s7_classic_connection.json")
+
+def load_s7_classic_config(config_path=None):
+    if config_path:
         if os.path.exists(config_path):
             with open(config_path, "r") as f:
                 return json.load(f)
+        else:
+            raise RuntimeError(f"Config file not found: {config_path}")
+    # First check current working directory, then script directory
+    for path in [os.getcwd(), os.path.dirname(__file__)]:
+        default_path = os.path.join(path, "s7_classic_connection.json")
+        if os.path.exists(default_path):
+            with open(default_path, "r") as f:
+                return json.load(f)
     return {}
 
-# Parse configuration file
-s7_cfg = load_s7_classic_config()
+
+# Parse configuration file, support -f <config_path>
+def parse_args():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('-f', '--file', dest='config_path', help='Path to config file')
+    parser.add_argument('--help', action='store_true', help='Show help')
+    args, unknown = parser.parse_known_args()
+    return args
+
+args = parse_args()
+s7_cfg = load_s7_classic_config(args.config_path)
 connections = s7_cfg.get("configs", [{}])[0].get("config", {}).get("connections", [])
 if not connections:
     raise RuntimeError("No connections found in s7_classic_connection.json")
@@ -44,33 +62,41 @@ DB_NUMBER = 1
 # Calculate DB area size: find max offset + type length for all datapoints
 TYPE_SIZE = {"Bool": 1, "Int": 2, "Real": 4, "String": 20, "DateTime": 8}
 
-def parse_offset(addr_str):
-    m = re.match(r"%DB1\.DBB(\d+)", addr_str)
+
+def parse_address(addr_str):
+    # 支持 %DBn.DBXb.x, %DBn.DBBb, %DBn.DBWw, %DBn.DBDd
+    m = re.match(r"%DB(\d+)\.(DBX|DBB|DBW|DBD)(\d+)(?:\.(\d+))?", addr_str)
     if not m:
         raise ValueError(f"Unsupported address string: {addr_str}")
-    return int(m.group(1))
+    db_num = int(m.group(1))
+    area_type = m.group(2)
+    byte_offset = int(m.group(3))
+    bit_offset = int(m.group(4)) if m.group(4) is not None else None
+    return db_num, area_type, byte_offset, bit_offset
 
-max_offset = 0
-for dp in datapoints:
-    offset = parse_offset(dp["address"]["address_string"])
-    size = TYPE_SIZE.get(dp["data_type"], 1)
-    max_offset = max(max_offset, offset + size)
-DB_SIZE = max(256, max_offset)
+# Helper to extract byte offset from address string
+def parse_offset(addr_str):
+    _, _, byte_offset, _ = parse_address(addr_str)
+    return byte_offset
 
 # ---------------------- Logging Configuration ----------------------
+
 LOG_DEST = os.environ.get("S7SERVER_LOG", "stdout")
 logger = logging.getLogger("s7server")
 logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 if LOG_DEST == "stdout":
     handler = logging.StreamHandler(sys.stdout)
+elif LOG_DEST == "stderr":
+    handler = logging.StreamHandler(sys.stderr)
 else:
-    handler = logging.FileHandler(LOG_DEST, encoding="utf-8")
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler = logging.FileHandler(LOG_DEST)
 handler.setFormatter(formatter)
 # Remove old handlers to avoid duplication
 logger.handlers.clear()
 logger.addHandler(handler)
 logger.info(f"log output to: {LOG_DEST}")
+
 
 # ANSI color codes (same as client)
 COLOR_INT = '\033[94m'      # Blue
@@ -79,7 +105,22 @@ COLOR_DOUBLE = '\033[96m'   # Cyan
 COLOR_BOOL = '\033[93m'     # Yellow
 COLOR_STRING = '\033[95m'   # Magenta
 COLOR_DATETIME = '\033[91m' # Red
-COLOR_RESET = '\033[0m'
+COLOR_RESET = '\033[0m'     # Reset
+
+# 计算DB区大小，支持DBX/DBB/DBW/DBD
+max_offset = 0
+for dp in datapoints:
+    _, area_type, byte_offset, _ = parse_address(dp["address"]["address_string"])
+    if area_type == "DBX":
+        size = 1
+    elif area_type == "DBW":
+        size = 2
+    elif area_type == "DBD":
+        size = 4
+    else:
+        size = TYPE_SIZE.get(dp["data_type"], 1)
+    max_offset = max(max_offset, byte_offset + size)
+DB_SIZE = max(256, max_offset)
 
 
 # ---------------------- S7 Server Initialization ----------------------
@@ -95,16 +136,27 @@ def write_bool_points(points):
     value = True
     while True:
         value = not value
+        written_offsets = set()
         for dp in points:
             offset = parse_offset(dp["address"]["address_string"])
-            db_buffer[offset] = b'\x01'[0] if value else b'\x00'[0]
+            if offset in written_offsets:
+                continue
+            written_offsets.add(offset)
+            if value:
+                db_buffer[offset] = random.randint(1, 255)
+            else:
+                db_buffer[offset] = 0
             logger.info(f"{COLOR_BOOL}Wrote bool: {value} to {dp['address']['address_string']}{COLOR_RESET}")
         time.sleep(FREQUENCY)
 
 def write_int_points(points):
     while True:
+        written_offsets = set()
         for dp in points:
             offset = parse_offset(dp["address"]["address_string"])
+            if offset in written_offsets:
+                continue
+            written_offsets.add(offset)
             value = random.randint(0, 65535)
             db_buffer[offset:offset+2] = value.to_bytes(2, byteorder='big')
             logger.info(f"{COLOR_INT}Wrote int: {value} to {dp['address']['address_string']}{COLOR_RESET}")
@@ -112,17 +164,26 @@ def write_int_points(points):
 
 def write_real_points(points):
     while True:
+        written_offsets = set()
         for dp in points:
             offset = parse_offset(dp["address"]["address_string"])
+            if offset in written_offsets:
+                continue
+            written_offsets.add(offset)
             value = random.uniform(0, 100)
             db_buffer[offset:offset+4] = struct.pack('>f', value)
             logger.info(f"{COLOR_FLOAT}Wrote real: {value:.2f} to {dp['address']['address_string']}{COLOR_RESET}")
         time.sleep(FREQUENCY)
 
+# 单独定义写string类型的线程函数
 def write_string_points(points):
     while True:
+        written_offsets = set()
         for dp in points:
             offset = parse_offset(dp["address"]["address_string"])
+            if offset in written_offsets:
+                continue
+            written_offsets.add(offset)
             s = f"Hello_{random.randint(100,999)}"
             b = s.encode('ascii')
             max_len = 18  # S7 standard string max content length
@@ -137,8 +198,12 @@ def write_string_points(points):
 
 def write_datetime_points(points):
     while True:
+        written_offsets = set()
         for dp in points:
             offset = parse_offset(dp["address"]["address_string"])
+            if offset in written_offsets:
+                continue
+            written_offsets.add(offset)
             now = time.localtime()
             year = now.tm_year % 100
             month = now.tm_mon
@@ -233,7 +298,7 @@ Usage:
     python s7server.py [--help]
 
 Configuration:
-    The server reads its configuration from 's7_classic_connection.json' in the current directory or script directory.
+    The server reads its configuration from 's7_classic_connection.json' in the current directory or using -f provide config file.
     You must provide connection and datapoint information in this file. Example structure:
 
     {
@@ -286,7 +351,7 @@ To show this help:
     print(help_text)
 
 if __name__ == "__main__":
-    if "--help" in sys.argv:
+    if args.help:
         print_help()
     else:
         main()
